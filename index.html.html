@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Birthday Surprise Rakhi</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+text-align:center;
+overflow:hidden;
+color:#222;
+}
+
+.page{
+display:none;
+height:100vh;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+.show{display:flex;}
+
+button{
+padding:12px 25px;
+font-size:18px;
+margin:10px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+img{
+width:280px;
+border-radius:20px;
+animation:zoom 6s infinite alternate;
+}
+
+@keyframes zoom{
+from{transform:scale(1)}
+to{transform:scale(1.1)}
+}
+
+.floating{
+position:fixed;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+
+.heart,.balloon{
+position:absolute;
+font-size:24px;
+animation:float linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh)}
+100%{transform:translateY(-10vh)}
+}
+
+.confetti{
+position:fixed;
+font-size:22px;
+animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+0%{transform:translateY(-50px)}
+100%{transform:translateY(100vh)}
+}
+
+#egg{
+position:fixed;
+left:10px;
+bottom:10px;
+font-size:14px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="m1" src="M1.mp3"></audio>
+<audio id="m2" src="M2.mp3"></audio>
+<audio id="m3" src="M3.mp3"></audio>
+<audio id="m4" src="M4.mp3"></audio>
+
+<div class="floating" id="float"></div>
+
+<!-- 1 -->
+
+<div class="page show" id="p1">
+<h1>✨ Someone very special has a birthday today…</h1>
+<p>And a small surprise has been prepared just for you Rakhi.</p>
+<button onclick="next(2)">Start the Surprise</button>
+</div>
+
+<!-- 2 -->
+
+<div class="page" id="p2">
+<h1>Are you Rakhi?</h1>
+<button onclick="next(3)">Yes</button>
+<button onclick="wrong()">No</button>
+</div>
+
+<!-- 3 -->
+
+<div class="page" id="p3">
+<h2>This birthday surprise is protected 🔐</h2>
+<p>Only Rakhi can unlock it</p>
+
+<input id="pass">
+
+<br><br>
+
+<button onclick="checkPass()">Unlock</button>
+
+<button onclick="alert('Hint: Jaake krishna se pucho')">Hint</button>
+
+</div>
+
+<!-- 4 -->
+
+<div class="page" id="p4">
+<h1 id="load">Preparing a special birthday surprise for you Rakhi…</h1>
+</div>
+
+<!-- 5 -->
+
+<div class="page" id="p5">
+<h1>Are you ready for your birthday surprise?</h1>
+<button onclick="next(6)">Yes</button>
+<button onclick="alert('Too late… surprise already started 😏')">No</button>
+</div>
+
+<!-- 6 -->
+
+<div class="page" id="p6">
+<h1>Am I the most annoying best friend ever?</h1>
+<button onclick="funny()">Yes</button>
+<button onclick="wrong()">No</button>
+</div>
+
+<!-- 7 Cake -->
+
+<div class="page" id="p7">
+
+<h1>Will you share your birthday cake with me? 🍰</h1>
+
+<button id="yesCake" onmouseover="moveCake()">Yes</button>
+
+<button onclick="cakeNo()">No</button>
+
+<div id="newYes"></div>
+
+</div>
+
+<!-- 8 -->
+
+<div class="page" id="p8">
+<h1>Do you think our friendship is crazy but perfect?</h1>
+<button onclick="next(9)">Yes</button>
+<button onclick="wrong()">No</button>
+</div>
+
+<!-- 9 Countdown -->
+
+<div class="page" id="p9">
+<h1 id="count">5</h1>
+</div>
+
+<!-- 10 Photo -->
+
+<div class="page" id="p10">
+
+<img src="P1.jpg">
+
+<p>
+The world became brighter the day you were born.<br>
+A beautiful soul with the cutest smile.<br>
+Tumhari smile hi meri favorite notification hai.
+</p>
+
+<button onclick="next(11)">Next</button>
+
+</div>
+
+<!-- 11 Photo -->
+
+<div class="page" id="p11">
+
+<img src="P2.jpg">
+
+<p>
+And my life became better the day we became friends.<br>
+Thank you for still being my best friend.
+</p>
+
+<button onclick="next(12)">Final</button>
+
+</div>
+
+<!-- 12 Final -->
+
+<div class="page" id="p12">
+
+<h1>🎂 Happy Birthday Rakhi!</h1>
+
+<p id="type"></p>
+
+</div>
+
+<div id="egg" onclick="egg()">😑 Do not click here 👀</div>
+
+<script>
+
+function next(n){
+
+let pages=document.querySelectorAll(".page")
+
+pages.forEach(p=>p.classList.remove("show"))
+
+document.getElementById("p"+n).classList.add("show")
+
+if(n==4)loading()
+
+if(n==9){
+document.getElementById("m2").play()
+count()
+}
+
+if(n==10){
+document.getElementById("m3").play()
+}
+
+if(n==12){
+document.getElementById("m4").play()
+confetti()
+typing()
+}
+
+}
+
+function wrong(){
+document.getElementById("m1").play()
+alert("Nice try… try again 😜")
+}
+
+function checkPass(){
+
+let p=document.getElementById("pass").value
+
+if(p=="Rakhi G") next(4)
+
+else wrong()
+
+}
+
+function loading(){
+
+let lines=[
+"Loading happiness…",
+"Scanning Rakhi’s awesomeness…",
+"Almost ready…",
+"🎉 Surprise Ready!"
+]
+
+let i=0
+
+let t=setInterval(()=>{
+
+document.getElementById("load").innerText=lines[i]
+
+i++
+
+if(i==lines.length){
+
+clearInterval(t)
+
+setTimeout(()=>next(5),1500)
+
+}
+
+},1500)
+
+}
+
+function funny(){
+
+alert("Good! Because this annoying best friend loves you 💛")
+
+next(7)
+
+}
+
+function moveCake(){
+
+let b=document.getElementById("yesCake")
+
+b.style.position="absolute"
+b.style.left=Math.random()*80+"%"
+b.style.top=Math.random()*80+"%"
+
+}
+
+function cakeNo(){
+
+alert("Okay… that’s fair. I live far away anyway 😅🍰")
+
+document.getElementById("newYes").innerHTML='<button onclick="next(8)">Yes</button>'
+
+}
+
+function count(){
+
+let n=5
+
+let t=setInterval(()=>{
+
+n--
+
+document.getElementById("count").innerText=n
+
+if(n==0){
+
+clearInterval(t)
+
+next(10)
+
+}
+
+},1000)
+
+}
+
+function confetti(){
+
+for(let i=0;i<120;i++){
+
+let c=document.createElement("div")
+
+c.className="confetti"
+c.innerHTML="🎉"
+c.style.left=Math.random()*100+"%"
+
+document.body.appendChild(c)
+
+}
+
+}
+
+function typing(){
+
+let text="Forever stuck with your annoying best friend 😌"
+
+let i=0
+
+let t=setInterval(()=>{
+
+document.getElementById("type").innerHTML+=text[i]
+
+i++
+
+if(i>=text.length)clearInterval(t)
+
+},70)
+
+}
+
+function egg(){
+
+alert("AI Birthday Analysis Starting...\nScanning Rakhi...\nCake Love Level: 100%\nCoolness Level: 999%\nResult: Amazing Human 😂")
+
+}
+
+for(let i=0;i<30;i++){
+
+let e=document.createElement("div")
+
+e.className="heart"
+e.innerHTML="❤️"
+e.style.left=Math.random()*100+"%"
+e.style.animationDuration=(5+Math.random()*5)+"s"
+
+document.getElementById("float").appendChild(e)
+
+}
+
+for(let i=0;i<30;i++){
+
+let e=document.createElement("div")
+
+e.className="balloon"
+e.innerHTML="🎈"
+e.style.left=Math.random()*100+"%"
+e.style.animationDuration=(6+Math.random()*5)+"s"
+
+document.getElementById("float").appendChild(e)
+
+}
+
+</script>
+
+</body>
+</html>
